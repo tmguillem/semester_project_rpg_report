@@ -1,0 +1,69 @@
+\chapter{Discussion}\label{chap:discussion}
+
+\section{Conclusion}\label{sec:conclusion}
+
+In this work, we have reviewed the current state-of-the-art of deep learning-based inertial odometry.
+We have reproduced and adapted some of the results available, which in all cases are framed in 2D environment such as in autonomous car driving or walking, into the more challenging 3D setup of agile aerial units. 
+We decide to constrain our research to two well-known, publicly available MAV datasets: the EuRoC and the BlackBird.
+Although our results are based on a selection of the flights available in both datasets, our approaches are generalizable to any similar data framework.
+Despite that, we also remark the fact that every dataset has a unique IMU sensor with unique intrinsic parameters, so most likely our models would need to be re-trained for every dataset.
+In other words, it is very possible that any deep learning model for inertial odometry has to be trained with the specific IMU that is going to be used at inference time. 
+
+In particular, we have tackled two different estimation tasks using IMU data as the prediction foundation, from three different perspectives, where each one builds up on the knowledge gathered by all the previous experiments.
+We believe our research pushes the understanding of the problem of DL-based IO towards a more reliable solution, and we propose several ways of continuing our research that we believe are promising.
+
+In particular, we have started our research by re-implemented a convolutional deep model from the literature to regress the speed magnitude of a drone just from IMU measurements.
+We argue why this problem setup is ill-posed, since the speed cannot be properly predicted from inertial data without an initial value, and remark the positive and negative characteristics of the proposed architecture for this task.
+We show that this trained model, that can perfectly fit a training dataset, is not properly predicting on any other test set not used in training time.
+However, we also validate the model performance with an ideal IMU measurement dataset without noise, and obtain interesting results which suggest that actually the speed estimate might have some meaning after all.
+
+Next, we reformulate the problem into replicating the IMU integration process with a deep model.
+Given an initial 10-dimensional state, and a window of IMU data, we predict the state at the end of such window.
+Our hope is that the deep model can learn to overcome the inherent noise of this kind of inertial sensor, which renders vanilla IMU integration not reliable for inertial odometry on its own.
+We propose a simpler CNN model inspired by the best features of the previous one, that helps to debug better which architectures work and which don't for this task.
+We show that convolutional layers are likely to be a good idea for processing IMU data, but we also reason why using the initial state as an input increases the risk of over-fitting during training time. 
+We also expand an idea from the literature to help a model learn from rotations in quaternion form, by using their Lie Algebra representation.
+We show that this change helps significantly in integrating the rotation state, and subsequentially improves the quality of the overall prediction.
+With this approach, we obtain a model that outperforms IMU integration, but is still unreliable as a long-term odometer.
+
+For our final study, we continue working on the same IMU integration task, but we incorporate yet another concept from the literature.
+The latter allows to compute a \emph{state increment} just from IMU data, without relying on any input state whatsoever, whose mathematical reasoning is based on the \emph{pre-integration} theory.
+We propose a very lightly parametrized deep model which combines multiple architectural ideas from the literature, with a customized operational flow to reinforce some theoretically founded inter-dependencies between intermediate output variables.
+We train this model to learn to estimate the pre-integrated states, and apply them in a non-trainable manner to an input state to generate an output state prediction.
+Although this approach looks promising, its proves to be equally challenging to properly train.
+We propose several improvements that help fine-tune the model, although unfortunately we don't manage to fully recover the optimal parameter set.
+
+As a wrap up, we compare the last three models for IMU state integration on three different datasets to evaluate their performance against each other and vanilla IMU double integration.
+We show that so far the best model obtained for short and long term state integration is the Lie Algebra-based model.
+Namely, this model, although it is not able to properly follow a state sequence just from an initial state and a chain of IMU data, manages not to drift away from the span of the data.
+On the other hand, all three models almost consistently outperform double-integration for all the components of the state, with the exception of the rotation term.
+
+Despite this quantitative result, we believe that the formulation of the pre-integration model is very promising.
+Its current problem is that, due to the fact that the four output values are dependent on each other, an error on the one of them immediately translates to errors in the rest.
+This problem makes the training of this architecture very challenging, as all variables must be optimized at once.
+For this reason, we believe that this model requires a probabilistic reformulation so that it can handle uncertainty.
+Furthermore, if it could also retain information from previous predictions to predict the next iteration, then the outputs could gain a lot in temporal consistency.
+A first approach for the memory idea be actually quite easy to implement, as the current recurrent generative layers could accept as input the hidden states from the previous iteration of predictions.
+Right now, for every prediction these hidden states are initialized from 0, and thus the model does not keep information between different windows.
+
+
+\section{Future Work}\label{sec:future_work}
+
+We believe our three studied models, and especially the last one, have plenty of room for interesting improvements that could help in the problem of IO.
+
+Although we know that the speed regressor is most likely unreliable for predicting the speed state, we have seen that it might actually be useful as a low-confidence measurement update in a nonlinear estimation pipeline.
+Maybe a similar approach, with a much lighter model, could be used as a measurement system in, for example, an Extended Kalman Filter.
+
+So far, our second model has probably shown the best results in terms of long-term state prediction. 
+Furthermore, despite our reasoning that its setup might be prone to over-fitting the data, we also show that it is not the case for our model.
+Finally, we also provide empirical data that indicates that some of its architectural features are introducing more noise than helping, so removing these and training again the model in similar conditions could be an approach worth trying.
+
+And regarding our third model, we are convinced that its theoretical background is powerful enough for it to eventually become a good estimator.
+According to our opinion, there are two very interesting improvements that could be performed on it.
+\begin{itemize}
+    \item Instead of trying to predict a final state from the initial state, predict a probability distribution of final states, given a probability distribution of initial states. 
+    This would allow the model to perform some kind of estimate update, given the likelihood of input states.
+    \item Related with the previous point, the pre-integrated state generators in our model are three recurent GRU cells. 
+    It would be very interesting if these cells could recover the hidden state from the last prediction, and use it as initial hidden state.
+    Perhaps the model then could be trained to pass on some information for the next prediction iteration that could help it gain some temporal consistency in between windows of time.
+\end{itemize}

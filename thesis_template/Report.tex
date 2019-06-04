@@ -1,0 +1,80 @@
+\documentclass[10pt,twoside,a4paper,fleqn]{report}
+\usepackage{etex} % required for tikz figures
+\usepackage[english,st]{rpg} % select type {semester}/bachelor/master thesis: {st}/bt/mt
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{cancel}
+\usepackage{IEEEtrantools}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{amsfonts}
+\usepackage{multirow}
+
+% Page header (don't change)____________________________________________________
+\setlength{\parindent}{0em}                 % Disable parindent
+\rhead[\nouppercase{\rightmark}]{\thepage}  % Special headings
+\lhead[\thepage]{\nouppercase{\leftmark}}   % Special headings
+\cfoot{}                                    % Special headings
+
+%%%%%%%% Hint %%%%%%%%%%%
+% Define your custom stuff here, e.g. Symbols that you are using. If you define them here it is easy to change them later on if you run into a nomenclature conflict.
+\newcommand{\mysymbol}[0]{\mathbf{S}_{my}}   % custom symbol which can easily be changed if necessary
+\newcommand{\bomega}[0]{\boldsymbol{\omega}} % bold greek letter
+\newcommand{\bSymb}[1]{\mathbf{#1}}			% toy example with one argument
+
+% tikz plots
+\pgfplotsset{compat=newest}
+\pgfplotsset{plot coordinates/math parser=false}
+\pgfplotsset{yticklabel style={text width=2em,align=right}}
+\newlength\fheight
+\newlength\fwidth
+
+% Figures from Inkscape
+\graphicspath{{img//}}
+
+% Title page (please fill in)___________________________________________________
+\title{Improving Inertial Odometry using Machine Learning}
+
+\studentA{Guillem Torrente-Marti}
+\ethidA{46-947-606}
+\emailA{tguillem@student.ethz.ch}
+
+% \studentB{Second Student}
+% \ethidB{12-345-678}
+% \semesterB{9}
+% \emailB{second@student.ethz.ch}
+
+\supervision{Zichao Zhang\\ Elia Kaufmann\\ Prof. Dr. Davide Scaramuzza}
+\date{May 2019}
+
+\infopage
+\declaration
+
+% Begin document________________________________________________________________
+\begin{document}
+\maketitle 							      % Create title page
+
+% Preamble______________________________________________________________________
+\pagenumbering{roman} 				% Begin roman page numbering (i,ii,...)
+\input{chapters/0_preamble}
+
+% Chapters______________________________________________________________________
+\pagestyle{fancy}             % Fancy headings
+\pagenumbering{arabic}				% Begin arabic page numbering (1,2,...)
+
+\input{chapters/1_introduction}
+\input{chapters/2_methods}
+\input{chapters/3_experiments}
+\input{chapters/4_discussion}
+
+\cleardoublepage
+
+% Appendix______________________________________________________________________
+\appendix
+\input{chapters/10_appendix}
+
+% Bibliography__________________________________________________________________
+
+\bibliographystyle{IEEEtran}
+\bibliography{bibtex/references.bib}
+\bibliographystyle{unsrt}
+\end{document}

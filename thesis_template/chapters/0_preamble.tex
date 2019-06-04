@@ -1,0 +1,83 @@
+%---------------------------------------------------------------------------
+% Table of contents
+
+ \setcounter{tocdepth}{2}
+ \tableofcontents
+ \cleardoublepage
+
+%---------------------------------------------------------------------------
+% List of Figures
+
+ \addcontentsline{toc}{chapter}{List of Figures}
+ \listoffigures
+ \clearpage
+
+%---------------------------------------------------------------------------
+% List of Tables
+
+ % \addcontentsline{toc}{chapter}{List of Algorithms}
+ % \listofalgorithms
+ % \clearpage
+
+%---------------------------------------------------------------------------
+% Abstract
+
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+Almost any mobile robot nowadays is equipped with an Inertial Measurement Unit, an electronic sensor which provides high-rate observations of its acceleration and angular velocity states. 
+Unfortunately, these sensors are usually very noisy, and unless paired with some other complementary source of state estimation, have shown to be unreliable for 3D Inertial Odometry (IO).
+In this report, we investigate how supervised deep learning can help to make the problem more feasible.
+We review the existing ideas in the state-of-the-art, and implement several artificial neural architectures for increasingly demanding tasks. 
+By iteratively building on the results, we finally address the task of 3-fold state integration for position, velocity and orientation states.
+We propose three different formulations of the learning problem that all demonstrate to be effective at reducing the effect of IMU drift, which shows the first progresses towards a more reliable deep IO pipeline. 
+Although still not fully developed, the last of these three studied approaches is an original formulation derived from the mapping of the rotation state to its Lie Algebra space, and the usage of an IMU pre-integration theory recently proposed.
+We finally propose several interesting ways to continue fine-tuning our current state estimator towards a more context-aware probabilistic model.
+    
+\cleardoublepage
+
+%---------------------------------------------------------------------------
+% Symbols
+
+\chapter*{Nomenclature}\label{chap:symbole}
+\addcontentsline{toc}{chapter}{Nomenclature}
+
+\section*{Notation}
+  \begin{tabbing}
+    \hspace*{1.6cm}   \= \kill
+    $\mathbf{J}$       \> Jacobian \\[0.5ex]
+    $\mathbf{T}_{WB}$  \> coordinate transformation from frame $B$ to frame $W$ \\[0.5ex]
+    $\mathbf{R}_{WB}$  \> orientation of $B$ with respect to $W$ \\[0.5ex]
+    $_W\mathbf{t}_{WB}$\> translation of $B$ with respect to $W$, expressed in coordinate system $W$ \\[0.5ex]
+  \end{tabbing}
+  
+Scalars are written in lower case letters ($a$), vectors in lower case bold letters ($\mathbf{a}$) and matrices in upper case bold letters ($\mathbf{A}$).
+
+\section*{Acronyms and Abbreviations}
+  \begin{tabbing}
+    \hspace*{1.8cm}  \= \kill
+    DoF     \> Degree of Freedom \\[0.5ex]
+    IMU     \> Inertial Measurement Unit \\[0.5ex]
+    MAV     \> Micro Aerial Vehicle \\[0.5ex]
+    ROS     \> Robot Operating System \\[0.5ex]
+    MEMS    \> Micro-Electro-Mechanical systems \\[0.5ex]
+    (V)IO   \> (Visual-)Inertial Odometry  \\[0.5ex]
+    ML      \> Machine Learning  \\[0.5ex]
+    DL      \> Deep learning  \\[0.5ex]
+    NN      \> Neural Network  \\[0.5ex]
+    CNN     \> Convolutional Neural Network  \\[0.5ex]
+    RNN     \> Recurrent Neural Network  \\[0.5ex]
+    LSTM    \> Long Short-Term Memory \\[0.5ex]
+    GRU     \> Gated Recurrent Unit \\[0.5ex]
+    (E)KF   \> (Extended) Kalman Filter \\[0.5ex]
+    (R)MSE  \> (Root) Mean Squared Error  \\[0.5ex]
+    BB      \> BlackBird (dataset)  \\[0.5ex]
+    STFT    \> Short-Time Fourier Transform  \\[0.5ex]
+    SO(3)   \> Special Orthonormal group \\[0.5ex]
+    SE(3)   \> Special Euclidean group \\[0.5ex]
+    
+  \end{tabbing}
+
+\clearpage
+
+%---------------------------------------------------------------------------
